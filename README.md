@@ -19,11 +19,16 @@ https://us-central1-deltares-video-map.cloudfunctions.net/exportVideoMapTiles?na
 
 
 # Development
-    
+  
+Insall Firebase CLI and login, select Video Map as a project
+
+`npm install -g firebase-tools`
+
+`firebase login`
+  
 Use the following command to deploy cloud functions:
 
 `npm run deploy`
-
 
 The following tools are used:
 
