@@ -1,9 +1,15 @@
-# video-map-service
+# Introduction
 
 A set of Google Cloud services used to generate tiled video maps.
 
+# Usage
 
+... TODO
+
+                       
 # Development
+
+Uses Google Cloud Functions and a Firebase as a database to manage video export tasks.
 
 Use the following command to deploy cloud functions:
 
