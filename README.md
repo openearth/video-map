@@ -1,6 +1,6 @@
 # Introduction
 
-A set of Google Cloud services used to generate tiled video maps.
+A set of Google Cloud Functions used to generate tiled video maps.
 
 # Usage
 
