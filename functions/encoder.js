@@ -18,6 +18,9 @@ const tileRegexp =  /^(.*)\/(\d+)\/(\d+)\/(\d+)\/(\d+)(\.\w+)$/
 function path2Tile(path) {
     // split  the path into a tile object
     let result = tileRegexp.exec(path)
+    if (!result) {
+        return result
+    }
     let prefix = result[1]
     let frame = result[2]
     let zoom = result[3]
@@ -53,6 +56,8 @@ async function filesToEncode(bucketName, prefix='', suffix='') {
 
 function videoTiles(files) {
     let tiles = files.map(path2Tile)
+    // todo, warn  if  we  filtered out something
+    tiles = tiles.filter(x => x)
     let grouped = _.groupBy(tiles, (tile) => {
         return [tile.zoom, tile.x, tile.y]
     })
