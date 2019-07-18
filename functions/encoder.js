@@ -1,3 +1,8 @@
+// Imports the Google Cloud client library
+const {Storage} = require('@google-cloud/storage');
+
+const firestore = require('firebase/firestore')
+
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
 const FfmpegCommand = require('fluent-ffmpeg')
 FfmpegCommand.setFfmpegPath(ffmpegPath)
@@ -6,7 +11,19 @@ const path = require('path')
 const stream = require('stream')
 const multer = require('multer')
 const storage = multer.memoryStorage()
-const mult = multer({ storage })
+
+async function filesToEncode(bucketName, prefix='', suffix='') {
+    // Lists files in the bucket
+    
+    // Creates a client
+    const storage = new Storage()
+    // Get all the files  that start with prefix
+    // I don't know what this syntax  means
+    let [files] = await storage.bucket(bucketName).getFiles({prefix})
+    // Filter by suffix
+    files = files.filter(file => file.endsWith(suffix))
+    return files
+}
 
 class WritableChunkCache extends stream.Writable {
 
@@ -64,3 +81,4 @@ class WritableChunkCache extends stream.Writable {
 }
 
 exports.encodeVideoMapTiles = encodeVideoMapTiles
+exports.filesToEncode = filesToEncode
