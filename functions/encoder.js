@@ -1,3 +1,9 @@
+// Imports the Google Cloud client library
+const {Storage} = require('@google-cloud/storage');
+
+const firestore = require('firebase/firestore')
+const _  = require('lodash')
+
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
 const FfmpegCommand = require('fluent-ffmpeg')
 FfmpegCommand.setFfmpegPath(ffmpegPath)
@@ -6,7 +12,57 @@ const path = require('path')
 const stream = require('stream')
 const multer = require('multer')
 const storage = multer.memoryStorage()
-const mult = multer({ storage })
+
+const tileRegexp =  /^(.*)\/(\d+)\/(\d+)\/(\d+)\/(\d+)(\.\w+)$/
+
+function path2Tile(path) {
+    // split  the path into a tile object
+    let result = tileRegexp.exec(path)
+    if (!result) {
+        return result
+    }
+    let prefix = result[1]
+    let frame = result[2]
+    let zoom = result[3]
+    let x = result[4]
+    let y = result[5]
+    let suffix = result[6]
+    return {
+        path,
+        prefix,
+        frame,
+        zoom,
+        x,
+        y,
+        suffix
+    }
+}
+async function filesToEncode(bucketName, prefix='', suffix='') {
+    // Lists files in the bucket
+    
+    // Creates a client
+    const storage = new Storage()
+    // Get all the files  that start with prefix
+    // I don't know what this syntax  means
+    let [files] = await storage.bucket(bucketName).getFiles({prefix})
+    // Filter by suffix
+    
+    files = files.filter(file => {
+        let result = file.name.endsWith(suffix)
+        return result
+    })
+    return files
+}
+
+function videoTiles(files) {
+    let tiles = files.map(path2Tile)
+    // todo, warn  if  we  filtered out something
+    tiles = tiles.filter(x => x)
+    let grouped = _.groupBy(tiles, (tile) => {
+        return [tile.zoom, tile.x, tile.y]
+    })
+    return grouped
+}
 
 class WritableChunkCache extends stream.Writable {
 
@@ -63,4 +119,9 @@ class WritableChunkCache extends stream.Writable {
     })
 }
 
-exports.encodeVideoMapTiles = encodeVideoMapTiles
+module.exports = {
+    encodeVideoMapTiles,
+    filesToEncode,
+    path2Tile,
+    videoTiles
+}
