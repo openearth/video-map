@@ -1,6 +1,8 @@
 import os
 import subprocess
 
+# vegetation monitor video frame maps are exported using: https://code.earthengine.google.com?scriptPath=users/cindyvdvries/vegetatiemonitor:2019-testing/export-satellite-maps-for-video
+
 # download from storage example:
 # gsutil cp -r gs://vegetatiemonitor/classificatie D:/video-map/vegetatiemonitor/
 
