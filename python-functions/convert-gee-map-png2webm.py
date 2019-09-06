@@ -13,11 +13,11 @@ folder = "classificatie"
 temp_dir = "temp"
 video_folder = folder+"-video"
 
-years = list(range(2000, 2001, 1))
-# if video == 'classificatie':
-#     years.remove(2012)
+years = list(range(2000, 2019, 1))
+if video == 'classificatie':
+    years.remove(2012)
 
-zoom_levels = range(5, 6, 1)
+zoom_levels = range(5, 15, 1)
 
 if not os.path.exists(r'{0}/{1}'.format(bucket_name, temp_dir)):
     os.mkdir(r'{0}/{1}'.format(bucket_name, temp_dir))
