@@ -37,7 +37,7 @@ setup(
     description="Tools to create,,  export and share video maps",
     entry_points={
         'console_scripts': [
-            'videomap=videomap.cli:main',
+            'videomap=videomap.cli:cli',
         ],
     },
     install_requires=requirements,
