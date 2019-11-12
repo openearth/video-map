@@ -5,6 +5,21 @@ from shutil import copyfile
 
 # vegetation monitor video frame maps are exported using: https://code.earthengine.google.com?scriptPath=users/cindyvdvries/vegetatiemonitor:2019-testing/export-satellite-maps-for-video
 
+# use the following parameters when exporting tiles from EE:
+#    Export.map.toCloudStorage({
+#      image: image, 
+#      description: description, 
+#      bucket: 'deltares-video-tiles', 
+#      fileFormat: 'png', 
+#      path: 'test-timelapse/' + year.toString(),
+#      minZoom: 5, 
+#      maxZoom: 14,
+#      region: reigon,
+#      skipEmptyTiles: true
+#    })
+
+
+
 # download from storage example:
 # gsutil cp -r gs://vegetatiemonitor/classificatie D:/video-map/vegetatiemonitor/
 
