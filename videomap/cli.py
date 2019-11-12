@@ -48,7 +48,7 @@ def convert(frames_dir, result_dir):
     # Convert all images per frame
     for (zoom, column, row), frames in tiles_df.groupby(['zoom', 'column', 'row']):
         # define the path of the  videos
-        video_path = (result_path / str(zoom) / str(column) / str(row)).with_suffix('.mp4')
+        video_path = (result_path / str(zoom) / str(column) / str(row)).with_suffix('.webm')
 
         # create an input string that reflects all images per tile
         input_path = (frames_path / '%d' / str(zoom) / str(column) / str(row)).with_suffix('.png')
@@ -56,13 +56,30 @@ def convert(frames_dir, result_dir):
         # create parents
         video_path.parent.mkdir(parents=True, exist_ok=True)
 
+        # cmd = 'ffmpeg -framerate 10 -i "{0}/{1}/%03d.png" -c:v libvpx -keyint_min 1 -cluster_size_limit 10M -cluster_time_limit 2100 -g 1 -an -qmin 0 -qmax 30 -crf 5 -auto-alt-ref 0 {2}/{1}.webm -y'.format(tile_x_dir, tile_y, new_path)
+
+        output_options = dict(
+            vcodec='libvpx',
+            keyint_min=1,
+            cluster_size_limit='10M',
+            cluster_time_limit=2100,
+            g=1,
+            qmin=0,
+            qmax=30,
+            crf=5,
+        )
+        # add unusual format option (to allow for alpha channel)
+        output_options['auto-alt-ref'] = '0'
+
         chain = (
             ffmpeg
-                .input(str(input_path))
-                .output(str(video_path))
+                .input(str(input_path), framerate=10)
+                .output(str(video_path),  **output_options)
                 .overwrite_output()
-                .run()
         )
+        click.echo(chain.get_args())
+        chain.run()
+
 
     return 0
 
